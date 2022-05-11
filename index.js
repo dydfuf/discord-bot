@@ -2,27 +2,25 @@ const { Client, Intents, MessageEmbed } = require('discord.js');
 const { korTypeToEng } = require('./translate.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
+const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
+
 client.once('ready', () => {
   console.log('Ready!');
 });
 
 client.on('messageCreate', (message) => {
   if (message.author.bot) return false;
-  const korean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/;
 
   if (korean.test(message.content)) {
     message.delete();
 
     message.channel.send({
       embeds: [
-        new MessageEmbed()
-          .setTitle('delete message')
-          .setFooter({ text: korTypeToEng(message.content) }),
+        new MessageEmbed().setTitle('delete message').setDescription(korTypeToEng(message.content)),
       ],
     });
+    return;
   }
-
-  console.log(`Message from ${message.author.username}: ${message.content}`);
 });
 
-client.login('OTczMjM1MDM4ODU2NTQ0Mjk2.Ynkpww.gEWhj1sIugb1M7B5CZSQ6DrCjk8');
+client.login(process.env.TOKEN);
